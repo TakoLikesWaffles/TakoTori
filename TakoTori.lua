@@ -29,12 +29,11 @@ local Window = Rayfield:CreateWindow({
     }
 })
 
-local Tab = Window:CreateTab("Change-Log", 4483362458) -- Title, Image
-local Label = Tab:CreateLabel("wip there isnt anything to talk about", 4483362458, Color3.fromRGB(50, 20, 20), false) -- Title, Icon, Color, IgnoreTheme
-
+local Tab = Window:CreateTab("Change-Log", 4483362458)
+local Label = Tab:CreateLabel("wip there isnt anything to talk about", 4483362458, Color3.fromRGB(50, 20, 20), false)
 
 local Tab = Window:CreateTab("Player", 4483362458)
-local Divider = Tab:CreateDivider() -- Added Divider
+local Divider = Tab:CreateDivider()
 
 local Section = Tab:CreateSection("Speed stuff")
 local tpWalkEnabled = false  
@@ -46,7 +45,6 @@ local function tpWalk()
         if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
             local root = player.Character.HumanoidRootPart
             local moveDirection = player.Character.Humanoid.MoveDirection
-
             if moveDirection.Magnitude > 0 then
                 root.CFrame = root.CFrame:Lerp(root.CFrame + (moveDirection * speed), lerpStrength)
             end
@@ -68,13 +66,13 @@ local Toggle = Tab:CreateToggle({
 
 local SpeedSlider = Tab:CreateSlider({
     Name = "TP Walk Speed",
-    Range = {1, 10}, -- Minimum: 1, Maximum: 10
-    Increment = 0.5, -- Adjusts in steps of 0.5
+    Range = {1, 10},
+    Increment = 0.5,
     Suffix = "Speed",
-    CurrentValue = speed, -- Uses the existing speed variable
+    CurrentValue = speed,
     Flag = "TpWalkSpeed",
     Callback = function(Value)
-        speed = Value -- Updates speed variable dynamically
+        speed = Value
     end,
 })
 
@@ -83,25 +81,16 @@ local Section = Tab:CreateSection("Jumping stuff")
 local Button = Tab:CreateButton({
     Name = "Allow Jumping",
     Callback = function()
-        -- Get the local player and character
         local player = game.Players.LocalPlayer
         local character = player.Character or player.CharacterAdded:Wait()
         local humanoid = character:WaitForChild("Humanoid")
         local rootPart = character:WaitForChild("HumanoidRootPart")
-
-        -- Set the JumpPower to a high value (optional, can be adjusted)
         humanoid.JumpPower = 50
-
-        -- Force the character to jump by applying an upward velocity directly to the HumanoidRootPart
         local bodyVelocity = Instance.new("BodyVelocity")
-        bodyVelocity.MaxForce = Vector3.new(5000, 5000, 5000)  -- Allowing high force
-        bodyVelocity.Velocity = Vector3.new(0, 100, 0)  -- Apply upward force to simulate jump
+        bodyVelocity.MaxForce = Vector3.new(5000, 5000, 5000)
+        bodyVelocity.Velocity = Vector3.new(0, 100, 0)
         bodyVelocity.Parent = rootPart
-
-        -- Remove the BodyVelocity after a short period so the player doesn't float in the air
         game.Debris:AddItem(bodyVelocity, 0.1)
-
-        -- Make sure the character is not in PlatformStand mode (could prevent jumping)
         humanoid.PlatformStand = false
         
         Rayfield:Notify({
@@ -110,64 +99,50 @@ local Button = Tab:CreateButton({
             Duration = 6.5,
             Image = 4483362458,
          })
-        end,
+    end,
 })
+
 local JumpPowerSlider = Tab:CreateSlider({
     Name = "Jump Power",
-    Range = {50, 200}, -- Adjust the range as needed
-    Increment = 5, -- Adjusts in steps of 5
+    Range = {50, 200},
+    Increment = 5,
     Suffix = "JumpPower",
-    CurrentValue = 50, -- Default JumpPower
+    CurrentValue = 50,
     Flag = "JumpPowerSlider",
     Callback = function(Value)
         local player = game.Players.LocalPlayer
         local character = player.Character or player.CharacterAdded:Wait()
         local humanoid = character:FindFirstChildOfClass("Humanoid")
-
         if humanoid then
-            humanoid.JumpPower = Value -- Updates JumpPower dynamically
+            humanoid.JumpPower = Value
         end
     end,
 })
 
- 
-
 local Section = Tab:CreateSection("Misc")
--- Function to perform a backflip
 local function performBackflip()
     local player = game.Players.LocalPlayer
     local character = player.Character
     if character and character:FindFirstChild("Humanoid") then
         local humanoid = character.Humanoid
         local rootPart = character.HumanoidRootPart
-
-        -- Prevent any other actions during the backflip
         humanoid.PlatformStand = true
-
-        -- Apply a small upward force for a more controlled flip
         local backflipForce = Instance.new("BodyVelocity")
-        backflipForce.MaxForce = Vector3.new(5000, 5000, 5000) -- Lower force than before
-        backflipForce.Velocity = Vector3.new(0, 35, 0) -- Moderate upward velocity
+        backflipForce.MaxForce = Vector3.new(5000, 5000, 5000)
+        backflipForce.Velocity = Vector3.new(0, 35, 0)
         backflipForce.Parent = rootPart
-
-        -- Apply fast rotation to simulate the flip
         local initialRotation = rootPart.CFrame
-        local rotationSpeed = 10 -- Control the speed of the flip rotation
-
-        -- Rotate the HumanoidRootPart quickly to simulate the flip
-        for i = 1, 25 do -- Rotate 25 times in the loop for the backflip effect
-            local newRotation = initialRotation * CFrame.Angles(math.rad(15 * i), 0, 0) -- Rotate around X-axis
+        local rotationSpeed = 10
+        for i = 1, 25 do
+            local newRotation = initialRotation * CFrame.Angles(math.rad(15 * i), 0, 0)
             rootPart.CFrame = newRotation
-            task.wait(0.03) -- Short time between each small rotation step
+            task.wait(0.03)
         end
-
-        -- Cleanup after the backflip is done
         backflipForce:Destroy()
         humanoid.PlatformStand = false
     end
 end
 
--- Add Backflip Button in the Player Tab
 local BackflipButton = Tab:CreateButton({
     Name = "Backflip",
     Callback = function()
@@ -175,23 +150,18 @@ local BackflipButton = Tab:CreateButton({
     end,
 })
 
-
-local Tab = Window:CreateTab("ESP", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("ESP", 4483362458)
 local Divider = Tab:CreateDivider()
 local espEnabled = false
 local players = game:GetService("Players")
-local killerESPColor = Color3.fromRGB(255, 0, 0)  -- Default Red for Killer
-local survivorESPColor = Color3.fromRGB(0, 255, 0)  -- Default Green for Survivor
+local killerESPColor = Color3.fromRGB(255, 0, 0)
+local survivorESPColor = Color3.fromRGB(0, 255, 0)
 
--- Function to apply ESP to Killer/Survivor models
 local function applyESPToModel(model, color)
     if not model or not model:FindFirstChild("Humanoid") then return end
-
-    -- Create Highlight if it doesn't exist
     if model:FindFirstChild("ESP_Highlight") then
         model.ESP_Highlight:Destroy()
     end
-
     local highlight = Instance.new("Highlight")
     highlight.Name = "ESP_Highlight"
     highlight.Parent = model
@@ -201,12 +171,9 @@ local function applyESPToModel(model, color)
     highlight.OutlineTransparency = 0.2
 end
 
--- Function to toggle ESP for Killers and Survivors
 local function toggleESP(value)
     espEnabled = value
-
     if espEnabled then
-        -- Apply ESP to existing Killers
         local killersFolder = game.Workspace.Players:FindFirstChild("Killers")
         if killersFolder then
             for _, model in pairs(killersFolder:GetChildren()) do
@@ -216,7 +183,6 @@ local function toggleESP(value)
             end
         end
 
-        -- Apply ESP to existing Survivors
         local survivorsFolder = game.Workspace.Players:FindFirstChild("Survivors")
         if survivorsFolder then
             for _, model in pairs(survivorsFolder:GetChildren()) do
@@ -226,7 +192,6 @@ local function toggleESP(value)
             end
         end
 
-        -- Watch for new Killers or Survivors being added
         game.Workspace.Players.Killers.ChildAdded:Connect(function(model)
             if model:IsA("Model") then
                 applyESPToModel(model, killerESPColor)
@@ -239,10 +204,8 @@ local function toggleESP(value)
             end
         end)
 
-        -- Set up periodic checking for new Killers and Survivors
         task.spawn(function()
             while espEnabled do
-                -- Reapply ESP to Killers and Survivors every 0.2 seconds
                 local killersFolder = game.Workspace.Players:FindFirstChild("Killers")
                 if killersFolder then
                     for _, model in pairs(killersFolder:GetChildren()) do
@@ -265,11 +228,10 @@ local function toggleESP(value)
                     end
                 end
 
-                task.wait(0.2) -- Wait 0.2 seconds before checking again
+                task.wait(0.2)
             end
         end)
     else
-        -- Remove all ESP highlights
         local function removeESP(folder)
             for _, model in pairs(folder:GetChildren()) do
                 if model:IsA("Model") and model:FindFirstChild("ESP_Highlight") then
@@ -292,7 +254,6 @@ local ESP_Toggle = Tab:CreateToggle({
     end,
 })
 
--- Health ESP Update
 local healthESPEnabled = false
 
 local function updateHealthESP()
@@ -311,27 +272,25 @@ local function updateHealthESP()
                     billboard.Adornee = head
                     billboard.AlwaysOnTop = true
 
-                    -- Create the outline text label with larger offset
                     local outlineLabel = Instance.new("TextLabel", billboard)
                     outlineLabel.Size = UDim2.new(1, 0, 1, 0)
                     outlineLabel.BackgroundTransparency = 1
                     outlineLabel.TextScaled = true
-                    outlineLabel.Font = Enum.Font.FredokaOne  -- Set font to FredokaOne
-                    outlineLabel.TextColor3 = Color3.fromRGB(255, 255, 255)  -- White outline
-                    outlineLabel.TextStrokeTransparency = 0.5  -- Set the transparency for the stroke (outline)
-                    outlineLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)  -- Black outline
-                    outlineLabel.Position = UDim2.new(0, 4, 0, 4)  -- Increased offset for a thicker outline
-                    outlineLabel.Text = ""  -- The outline doesn't need any text itself
+                    outlineLabel.Font = Enum.Font.FredokaOne
+                    outlineLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    outlineLabel.TextStrokeTransparency = 0.5
+                    outlineLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                    outlineLabel.Position = UDim2.new(0, 4, 0, 4)
+                    outlineLabel.Text = ""
 
-                    -- Create the main text label
                     local textLabel = Instance.new("TextLabel", billboard)
                     textLabel.Size = UDim2.new(1, 0, 1, 0)
                     textLabel.BackgroundTransparency = 1
                     textLabel.TextScaled = true
-                    textLabel.Font = Enum.Font.FredokaOne  -- Set font to FredokaOne
-                    textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Default text color
-                    textLabel.TextStrokeTransparency = 0  -- No stroke for main text
-                    textLabel.Text = ""  -- Empty text initially
+                    textLabel.Font = Enum.Font.FredokaOne
+                    textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    textLabel.TextStrokeTransparency = 0
+                    textLabel.Text = ""
                     billboard.Parent = head
                 end
 
@@ -341,16 +300,16 @@ local function updateHealthESP()
                     textLabel.Text = "Health: " .. math.floor(healthPercent) .. "%"
                     
                     if healthPercent > 50 then
-                        textLabel.TextColor3 = Color3.fromRGB(0, 255, 0) -- Green
+                        textLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
                     elseif healthPercent > 30 then
-                        textLabel.TextColor3 = Color3.fromRGB(255, 255, 0) -- Yellow
+                        textLabel.TextColor3 = Color3.fromRGB(255, 255, 0)
                     else
-                        textLabel.TextColor3 = Color3.fromRGB(255, 0, 0) -- Red
+                        textLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
                     end
                 end
             end
         end
-        task.wait(0.2) -- Update Health ESP every 0.2 seconds
+        task.wait(0.2)
     end
 end
 
@@ -373,11 +332,8 @@ local HealthESP_Toggle = Tab:CreateToggle({
     end,
 })
 
-
-
 local Section = Tab:CreateSection("Color picker")
 
--- Optional: Allow users to change ESP colors for Killer and Survivor
 local killerColorPicker = Tab:CreateColorPicker({
     Name = "Killer ESP Color",
     Color = Color3.fromRGB(255, 0, 0),
