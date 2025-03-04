@@ -29,11 +29,12 @@ local Window = Rayfield:CreateWindow({
     }
 })
 
-local Tab = Window:CreateTab("Change-Log", 4483362458)
-local Label = Tab:CreateLabel("wip there isnt anything to talk about", 4483362458, Color3.fromRGB(50, 20, 20), false)
+local Tab = Window:CreateTab("Change-Log", 4483362458)        
+local Label = Tab:CreateLabel("W.I.P Added expiremntal tab, Added frontflip", 4483362458, Color3.fromRGB(50, 20, 20), false)        
+
 
 local Tab = Window:CreateTab("Player", 4483362458)
-local Divider = Tab:CreateDivider()
+local Divider = Tab:CreateDivider()        
 
 local Section = Tab:CreateSection("Speed stuff")
 local tpWalkEnabled = false  
@@ -45,6 +46,7 @@ local function tpWalk()
         if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
             local root = player.Character.HumanoidRootPart
             local moveDirection = player.Character.Humanoid.MoveDirection
+
             if moveDirection.Magnitude > 0 then
                 root.CFrame = root.CFrame:Lerp(root.CFrame + (moveDirection * speed), lerpStrength)
             end
@@ -66,13 +68,13 @@ local Toggle = Tab:CreateToggle({
 
 local SpeedSlider = Tab:CreateSlider({
     Name = "TP Walk Speed",
-    Range = {1, 10},
-    Increment = 0.5,
+    Range = {1, 10},        
+    Increment = 0.5,        
     Suffix = "Speed",
-    CurrentValue = speed,
+    CurrentValue = speed,        
     Flag = "TpWalkSpeed",
     Callback = function(Value)
-        speed = Value
+        speed = Value        
     end,
 })
 
@@ -81,16 +83,25 @@ local Section = Tab:CreateSection("Jumping stuff")
 local Button = Tab:CreateButton({
     Name = "Allow Jumping",
     Callback = function()
+               
         local player = game.Players.LocalPlayer
         local character = player.Character or player.CharacterAdded:Wait()
         local humanoid = character:WaitForChild("Humanoid")
         local rootPart = character:WaitForChild("HumanoidRootPart")
+
+               
         humanoid.JumpPower = 50
+
+               
         local bodyVelocity = Instance.new("BodyVelocity")
-        bodyVelocity.MaxForce = Vector3.new(5000, 5000, 5000)
-        bodyVelocity.Velocity = Vector3.new(0, 100, 0)
+        bodyVelocity.MaxForce = Vector3.new(5000, 5000, 5000)         
+        bodyVelocity.Velocity = Vector3.new(0, 100, 0)         
         bodyVelocity.Parent = rootPart
+
+               
         game.Debris:AddItem(bodyVelocity, 0.1)
+
+               
         humanoid.PlatformStand = false
         
         Rayfield:Notify({
@@ -99,25 +110,27 @@ local Button = Tab:CreateButton({
             Duration = 6.5,
             Image = 4483362458,
          })
-    end,
+        end,
 })
-
 local JumpPowerSlider = Tab:CreateSlider({
     Name = "Jump Power",
-    Range = {50, 200},
-    Increment = 5,
+    Range = {50, 200},        
+    Increment = 5,        
     Suffix = "JumpPower",
-    CurrentValue = 50,
+    CurrentValue = 50,        
     Flag = "JumpPowerSlider",
     Callback = function(Value)
         local player = game.Players.LocalPlayer
         local character = player.Character or player.CharacterAdded:Wait()
         local humanoid = character:FindFirstChildOfClass("Humanoid")
+
         if humanoid then
-            humanoid.JumpPower = Value
+            humanoid.JumpPower = Value        
         end
     end,
 })
+
+ 
 
 local Section = Tab:CreateSection("Misc")
 local function performBackflip()
@@ -126,23 +139,34 @@ local function performBackflip()
     if character and character:FindFirstChild("Humanoid") then
         local humanoid = character.Humanoid
         local rootPart = character.HumanoidRootPart
+
+               
         humanoid.PlatformStand = true
+
+               
         local backflipForce = Instance.new("BodyVelocity")
-        backflipForce.MaxForce = Vector3.new(5000, 5000, 5000)
-        backflipForce.Velocity = Vector3.new(0, 35, 0)
+        backflipForce.MaxForce = Vector3.new(5000, 5000, 5000)        
+        backflipForce.Velocity = Vector3.new(0, 35, 0)        
         backflipForce.Parent = rootPart
+
+               
         local initialRotation = rootPart.CFrame
-        local rotationSpeed = 10
-        for i = 1, 25 do
-            local newRotation = initialRotation * CFrame.Angles(math.rad(15 * i), 0, 0)
+        local rotationSpeed = 10        
+
+               
+        for i = 1, 25 do        
+            local newRotation = initialRotation * CFrame.Angles(math.rad(15 * i), 0, 0)        
             rootPart.CFrame = newRotation
-            task.wait(0.03)
+            task.wait(0.03)        
         end
+
+               
         backflipForce:Destroy()
         humanoid.PlatformStand = false
     end
 end
 
+       
 local BackflipButton = Tab:CreateButton({
     Name = "Backflip",
     Callback = function()
@@ -150,18 +174,65 @@ local BackflipButton = Tab:CreateButton({
     end,
 })
 
-local Tab = Window:CreateTab("ESP", 4483362458)
+local function performFrontflip()
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+    if character and character:FindFirstChild("Humanoid") then
+        local humanoid = character.Humanoid
+        local rootPart = character.HumanoidRootPart
+
+               
+        humanoid.PlatformStand = true
+
+               
+        local frontflipForce = Instance.new("BodyVelocity")
+        frontflipForce.MaxForce = Vector3.new(5000, 5000, 5000)        
+        frontflipForce.Velocity = Vector3.new(0, 35, 0)        
+        frontflipForce.Parent = rootPart
+
+               
+        local initialRotation = rootPart.CFrame
+        local rotationSpeed = 10        
+
+               
+        for i = 1, 25 do        
+            local newRotation = initialRotation * CFrame.Angles(math.rad(-15 * i), 0, 0)        
+            rootPart.CFrame = newRotation
+            task.wait(0.03)        
+        end
+
+               
+        frontflipForce:Destroy()
+        humanoid.PlatformStand = false
+    end
+end
+
+       
+local FrontflipButton = Tab:CreateButton({
+    Name = "Frontflip",
+    Callback = function()
+        performFrontflip()
+    end,
+})
+
+
+
+local Tab = Window:CreateTab("ESP", 4483362458)        
 local Divider = Tab:CreateDivider()
 local espEnabled = false
 local players = game:GetService("Players")
-local killerESPColor = Color3.fromRGB(255, 0, 0)
-local survivorESPColor = Color3.fromRGB(0, 255, 0)
+local killerESPColor = Color3.fromRGB(255, 0, 0)         
+local survivorESPColor = Color3.fromRGB(0, 255, 0)         
 
+       
 local function applyESPToModel(model, color)
     if not model or not model:FindFirstChild("Humanoid") then return end
+
+           
     if model:FindFirstChild("ESP_Highlight") then
         model.ESP_Highlight:Destroy()
     end
+
     local highlight = Instance.new("Highlight")
     highlight.Name = "ESP_Highlight"
     highlight.Parent = model
@@ -171,9 +242,12 @@ local function applyESPToModel(model, color)
     highlight.OutlineTransparency = 0.2
 end
 
+       
 local function toggleESP(value)
     espEnabled = value
+
     if espEnabled then
+               
         local killersFolder = game.Workspace.Players:FindFirstChild("Killers")
         if killersFolder then
             for _, model in pairs(killersFolder:GetChildren()) do
@@ -183,6 +257,7 @@ local function toggleESP(value)
             end
         end
 
+               
         local survivorsFolder = game.Workspace.Players:FindFirstChild("Survivors")
         if survivorsFolder then
             for _, model in pairs(survivorsFolder:GetChildren()) do
@@ -192,6 +267,7 @@ local function toggleESP(value)
             end
         end
 
+               
         game.Workspace.Players.Killers.ChildAdded:Connect(function(model)
             if model:IsA("Model") then
                 applyESPToModel(model, killerESPColor)
@@ -204,8 +280,10 @@ local function toggleESP(value)
             end
         end)
 
+               
         task.spawn(function()
             while espEnabled do
+                       
                 local killersFolder = game.Workspace.Players:FindFirstChild("Killers")
                 if killersFolder then
                     for _, model in pairs(killersFolder:GetChildren()) do
@@ -228,10 +306,11 @@ local function toggleESP(value)
                     end
                 end
 
-                task.wait(0.2)
+                task.wait(0.2)        
             end
         end)
     else
+               
         local function removeESP(folder)
             for _, model in pairs(folder:GetChildren()) do
                 if model:IsA("Model") and model:FindFirstChild("ESP_Highlight") then
@@ -254,6 +333,7 @@ local ESP_Toggle = Tab:CreateToggle({
     end,
 })
 
+       
 local healthESPEnabled = false
 
 local function updateHealthESP()
@@ -272,25 +352,27 @@ local function updateHealthESP()
                     billboard.Adornee = head
                     billboard.AlwaysOnTop = true
 
+                           
                     local outlineLabel = Instance.new("TextLabel", billboard)
                     outlineLabel.Size = UDim2.new(1, 0, 1, 0)
                     outlineLabel.BackgroundTransparency = 1
                     outlineLabel.TextScaled = true
-                    outlineLabel.Font = Enum.Font.FredokaOne
-                    outlineLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-                    outlineLabel.TextStrokeTransparency = 0.5
-                    outlineLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-                    outlineLabel.Position = UDim2.new(0, 4, 0, 4)
-                    outlineLabel.Text = ""
+                    outlineLabel.Font = Enum.Font.FredokaOne         
+                    outlineLabel.TextColor3 = Color3.fromRGB(255, 255, 255)         
+                    outlineLabel.TextStrokeTransparency = 0.5         
+                    outlineLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)         
+                    outlineLabel.Position = UDim2.new(0, 4, 0, 4)         
+                    outlineLabel.Text = ""         
 
+                           
                     local textLabel = Instance.new("TextLabel", billboard)
                     textLabel.Size = UDim2.new(1, 0, 1, 0)
                     textLabel.BackgroundTransparency = 1
                     textLabel.TextScaled = true
-                    textLabel.Font = Enum.Font.FredokaOne
-                    textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-                    textLabel.TextStrokeTransparency = 0
-                    textLabel.Text = ""
+                    textLabel.Font = Enum.Font.FredokaOne         
+                    textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)         
+                    textLabel.TextStrokeTransparency = 0         
+                    textLabel.Text = ""         
                     billboard.Parent = head
                 end
 
@@ -300,16 +382,16 @@ local function updateHealthESP()
                     textLabel.Text = "Health: " .. math.floor(healthPercent) .. "%"
                     
                     if healthPercent > 50 then
-                        textLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+                        textLabel.TextColor3 = Color3.fromRGB(0, 255, 0)        
                     elseif healthPercent > 30 then
-                        textLabel.TextColor3 = Color3.fromRGB(255, 255, 0)
+                        textLabel.TextColor3 = Color3.fromRGB(255, 255, 0)        
                     else
-                        textLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+                        textLabel.TextColor3 = Color3.fromRGB(255, 0, 0)        
                     end
                 end
             end
         end
-        task.wait(0.2)
+        task.wait(0.2)        
     end
 end
 
@@ -332,8 +414,11 @@ local HealthESP_Toggle = Tab:CreateToggle({
     end,
 })
 
+
+
 local Section = Tab:CreateSection("Color picker")
 
+       
 local killerColorPicker = Tab:CreateColorPicker({
     Name = "Killer ESP Color",
     Color = Color3.fromRGB(255, 0, 0),
@@ -352,7 +437,7 @@ local survivorColorPicker = Tab:CreateColorPicker({
     end
 })
 
-local Tab = Window:CreateTab("Map stuff", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("Map stuff", 4483362458)        
 local Divider = Tab:CreateDivider()  
 local function enableDaylight()
     local Lighting = game:GetService("Lighting")
@@ -379,6 +464,80 @@ local DaylightToggle = Tab:CreateToggle({
                 Duration = 6.5,
                 Image = 4483362458,
              })
+        end
+    end,
+})
+local Tab = Window:CreateTab("EXPIRMENTALS", 4483362458)        
+local Divider = Tab:CreateDivider()  
+
+local function CompleteGenerators()
+    local MapFolder = workspace:FindFirstChild("Map")
+    local IngameFolder = MapFolder and MapFolder:FindFirstChild("Ingame")
+    local TakoToriFolder = IngameFolder and IngameFolder:FindFirstChild("Map")
+
+    if TakoToriFolder then
+        for _, generator in ipairs(TakoToriFolder:GetChildren()) do
+            if generator.Name == "Generator" and generator:FindFirstChild("Progress") and generator.Progress.Value < 100 then
+                       
+                generator.Remotes.RE:FireServer()
+            end
+        end
+    end
+end
+
+       
+local function IsOnGenerator()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    
+    local MapFolder = workspace:FindFirstChild("Map")
+    local IngameFolder = MapFolder and MapFolder:FindFirstChild("Ingame")
+    local TakoToriFolder = IngameFolder and IngameFolder:FindFirstChild("Map")
+
+    if TakoToriFolder then
+        for _, generator in ipairs(TakoToriFolder:GetChildren()) do
+            if generator.Name == "Generator" then
+                local generatorPosition = generator.Position
+                local distance = (humanoidRootPart.Position - generatorPosition).Magnitude
+                       
+                if distance < 5 then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
+       
+local GeneratorToggle = Tab:CreateToggle({
+    Name = "Do generators automaticly (really broken)",
+    CurrentValue = false,
+    Flag = "CompleteGenerators",
+    Callback = function(Value)
+        if Value then
+                   
+            spawn(function()
+                while wait(1) do         
+                    if IsOnGenerator() then
+                        CompleteGenerators()         
+                    end
+                end
+            end)
+            Rayfield:Notify({
+                Title = "Note:",
+                Content = "Its slow to make it realistic.",
+                Duration = 5,
+                Image = 4483362458,
+            })
+        else
+            Rayfield:Notify({
+                Title = "Note:",
+                Content = "also generators might be broken when you try to open them..",
+                Duration = 5,
+                Image = 4483362458,
+            })
         end
     end,
 })
